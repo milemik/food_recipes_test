@@ -1,6 +1,10 @@
 import pytest
+from rest_framework import status
+from rest_framework.reverse import reverse
+from rest_framework.test import APIClient
 
 from accounts.models import Account
+from tests.factories import AccountFactory
 
 
 @pytest.mark.django_db
@@ -13,3 +17,25 @@ def test_account_create_model():
 
     acc.set_password("testpass")
     assert Account.objects.all().count() == 1
+
+
+@pytest.mark.django_db
+def test_jwt_token():
+    password = "djangotest123"
+    user = AccountFactory()
+    user.set_password(password)
+    user.save()
+
+    client = APIClient()
+
+    url = reverse("token_obtain_pair")
+    response = client.post(url, {"email": user.email, "password": password})
+    assert response.status_code == status.HTTP_200_OK
+    assert "access" in response.json()
+
+    token = response.json()['access']
+    client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
+    url = reverse("ingredients")
+    response = client.get(url)
+
+    assert response.status_code == status.HTTP_200_OK

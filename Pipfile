@@ -11,6 +11,8 @@ djangorestframework = "*"
 pytest = "*"
 pytest-django = "*"
 factory-boy = "*"
+djangorestframework-simplejwt = "*"
+ipdb = "*"
 
 [requires]
 python_version = "3.8"

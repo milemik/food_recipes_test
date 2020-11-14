@@ -1,4 +1,7 @@
 import pytest
+from rest_framework import status
+from rest_framework.reverse import reverse
+from rest_framework.test import APIClient
 
 from recipes.models import Ingredients, Recipes, Rating
 from tests.factories import AccountFactory, IngredientsFactory, RecipesFactory
@@ -40,3 +43,13 @@ def test_create_rating():
     )
 
     assert Rating.objects.all().count() == 1
+
+
+@pytest.mark.django_db
+def test_ingredients_api():
+    url = reverse("ingredients")
+    client = APIClient()
+
+    response = client.get(url)
+
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
