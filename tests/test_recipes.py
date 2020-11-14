@@ -7,6 +7,15 @@ from recipes.models import Ingredients, Recipes, Rating
 from tests.factories import AccountFactory, IngredientsFactory, RecipesFactory
 
 
+@pytest.fixture
+def user_client():
+    user = AccountFactory()
+    client = APIClient()
+    client.force_authenticate(user=user)
+
+    return user, client
+
+
 @pytest.mark.django_db
 def test_create_ingredients():
     Ingredients.objects.create(
@@ -33,11 +42,13 @@ def test_create_recipe():
 @pytest.mark.django_db
 def test_create_rating():
     user = AccountFactory()
+    user2 = AccountFactory()
     ingredients = IngredientsFactory()
     recipes = RecipesFactory(author=user)
     recipes.ingredients.add(ingredients)
 
     Rating.objects.create(
+        user=user2,
         recipe=recipes,
         rate=3
     )
@@ -53,3 +64,46 @@ def test_ingredients_api():
     response = client.get(url)
 
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+
+@pytest.mark.django_db
+def test_create_recipes(user_client):
+    user, client = user_client
+    url = reverse("create-recipes")
+
+    response = client.post(url, {"name": "TestName", "recipe_text": "Some recipe text here"})
+
+    assert response.status_code == status.HTTP_201_CREATED
+    assert Recipes.objects.filter(author=user).exists()
+
+
+@pytest.mark.django_db
+def test_all_recipes_api(user_client):
+    user, client = user_client
+    url = reverse("all-recipes")
+
+    response = client.get(url)
+
+    assert response.status_code == status.HTTP_200_OK
+
+
+@pytest.mark.django_db
+def test_rate_api(user_client):
+    user, client = user_client
+    user2 = AccountFactory()
+    recipe = RecipesFactory(author=user2)
+    url = reverse("rate")
+
+    response = client.post(url, {"recipe": recipe.pk, "rate": 4})
+
+    assert response.status_code == status.HTTP_201_CREATED
+
+
+@pytest.mark.django_db
+def test_rate_api(user_client):
+    user, client = user_client
+    recipe = RecipesFactory(author=user)
+    url = reverse("rate")
+
+    response = client.post(url, {"recipe": recipe.pk, "rate": 4})
+    assert response.status_code == status.HTTP_400_BAD_REQUEST

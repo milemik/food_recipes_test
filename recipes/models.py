@@ -22,6 +22,7 @@ class Recipes(models.Model):
 
 
 class Rating(models.Model):
+    user = models.ForeignKey(Account, on_delete=models.CASCADE)
     recipe = models.ForeignKey(Recipes, on_delete=models.CASCADE)
     rate = models.PositiveIntegerField(default=5, validators=(MinValueValidator(1), MaxValueValidator(5)))
 
