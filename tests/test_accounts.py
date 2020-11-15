@@ -39,3 +39,21 @@ def test_jwt_token():
     response = client.get(url)
 
     assert response.status_code == status.HTTP_200_OK
+
+
+@pytest.mark.django_db
+def test_create_account_api():
+    data = {
+        "email": "mile@gmail.com",
+        "first_name": "mile",
+        "last_name": "miki",
+        "password": "password123"
+    }
+
+    url = reverse("create-account")
+
+    client = APIClient()
+    response = client.post(url, data=data)
+
+    assert response.status_code == status.HTTP_201_CREATED
+    assert Account.objects.filter(email=data['email']).exists()

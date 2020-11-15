@@ -13,8 +13,8 @@ class AccountManager(BaseUserManager):
             raise ValueError("Last name required")
 
         user = self.model(email=self.normalize_email(email),
-                          first_name=self.first_name,
-                          last_name=self.last_name)
+                          first_name=first_name,
+                          last_name=last_name)
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -29,7 +29,7 @@ class AccountManager(BaseUserManager):
         )
 
         user.is_admin = True
-        user.save(self._db)
+        user.save(using=self._db)
         return user
 
 
@@ -42,10 +42,10 @@ class Account(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
-    objects = AccountManager()
-
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ("first_name", "last_name")
+
+    objects = AccountManager()
 
     def __str__(self):
         return self.email
@@ -55,7 +55,7 @@ class Account(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return True
-    @property
-    def is_stuff(self):
-        return self.is_admin
 
+    @property
+    def is_staff(self):
+        return self.is_admin
