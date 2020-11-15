@@ -105,6 +105,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
@@ -129,6 +130,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 HUNTER_API_KEY = "hunter_api_key_here"
+
+CLEARBIT_API_KEY = "clearbit_api_key"
 
 try:
     from .my_settings import *
