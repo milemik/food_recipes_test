@@ -4,7 +4,7 @@ from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 
 from recipes.models import Ingredients, Recipes, Rating
-from tests.factories import AccountFactory, IngredientsFactory, RecipesFactory
+from tests.factories import AccountFactory, IngredientsFactory, RecipesFactory, RatingFactory
 
 
 @pytest.fixture
@@ -80,11 +80,15 @@ def test_create_recipes(user_client):
 @pytest.mark.django_db
 def test_all_recipes_api(user_client):
     user, client = user_client
+    user2 = AccountFactory()
+    recipe = RecipesFactory(author=user)
+    RatingFactory(recipe=recipe, user=user2, rate=5)
     url = reverse("all-recipes")
 
     response = client.get(url)
 
     assert response.status_code == status.HTTP_200_OK
+    assert response.json()[0]['average_rating'] == 5.0
 
 
 @pytest.mark.django_db
@@ -107,3 +111,25 @@ def test_rate_api(user_client):
 
     response = client.post(url, {"recipe": recipe.pk, "rate": 4})
     assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+
+@pytest.mark.django_db
+def test_average_rate(user_client):
+    user, client = user_client
+    recipe = RecipesFactory(author=user)
+    user2 = AccountFactory()
+    user3 = AccountFactory()
+    user4 = AccountFactory()
+    RatingFactory(recipe=recipe, user=user2, rate=3)
+    RatingFactory(recipe=recipe, user=user3, rate=5)
+    RatingFactory(recipe=recipe, user=user4, rate=4)
+
+    expected_average_rate = round((3+5+4)/3, 2)
+
+    url = reverse("all-recipes")
+
+    response = client.get(url)
+
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json()[0]['average_rating'] == expected_average_rate
+

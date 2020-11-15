@@ -2,7 +2,7 @@ import factory
 from factory.django import DjangoModelFactory
 
 from accounts.models import Account
-from recipes.models import Ingredients, Recipes
+from recipes.models import Ingredients, Recipes, Rating
 
 
 class AccountFactory(DjangoModelFactory):
@@ -28,3 +28,12 @@ class RecipesFactory(DjangoModelFactory):
 
     class Meta:
         model = Recipes
+
+
+class RatingFactory(DjangoModelFactory):
+    user = factory.SubFactory(AccountFactory)
+    recipe = factory.SubFactory(RecipesFactory)
+    rate = 3
+
+    class Meta:
+        model = Rating

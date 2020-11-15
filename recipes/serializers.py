@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from recipes.models import Ingredients, Recipes, Rating
-from recipes.utils import is_recipe_owner
+from recipes.utils import is_recipe_owner, get_average_rating
 
 
 class IngredientsSerializer(serializers.ModelSerializer):
@@ -23,9 +23,14 @@ class CreateRecipesSerializer(serializers.ModelSerializer):
 
 class RecipesSerializer(serializers.ModelSerializer):
 
+    average_rating = serializers.SerializerMethodField()
+
     class Meta:
         model = Recipes
-        fields = ("author", "name", "recipe_text", "ingredients")
+        fields = ("author", "name", "recipe_text", "ingredients", "average_rating")
+
+    def get_average_rating(self, obj):
+        return get_average_rating(obj.pk)
 
 
 class RatingSerializer(serializers.ModelSerializer):
