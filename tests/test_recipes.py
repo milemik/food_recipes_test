@@ -120,11 +120,13 @@ def test_average_rate(user_client):
     user2 = AccountFactory()
     user3 = AccountFactory()
     user4 = AccountFactory()
+    user5 = AccountFactory()
     RatingFactory(recipe=recipe, user=user2, rate=3)
     RatingFactory(recipe=recipe, user=user3, rate=5)
     RatingFactory(recipe=recipe, user=user4, rate=4)
+    RatingFactory(recipe=recipe, user=user5, rate=2)
 
-    expected_average_rate = round((3+5+4)/3, 2)
+    expected_average_rate = round((3+5+4+2)/4, 2)
 
     url = reverse("all-recipes")
 
@@ -132,4 +134,3 @@ def test_average_rate(user_client):
 
     assert response.status_code == status.HTTP_200_OK
     assert response.json()[0]['average_rating'] == expected_average_rate
-
