@@ -128,4 +128,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-HUNTER_API_KEY = "d71703716ee8a1b75e79a3ce8a5341abeca89688"
+HUNTER_API_KEY = "hunter_api_key_here"
+
+try:
+    from .my_settings import *
+except ImportError:
+    pass
