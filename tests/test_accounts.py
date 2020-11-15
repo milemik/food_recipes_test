@@ -50,6 +50,14 @@ def test_create_account_api():
         "password": "password123"
     }
 
+    fake_data = {
+        "email": "mile@test.com",
+        "first_name": "mile",
+        "last_name": "miki",
+        "password": "password123"
+
+    }
+
     url = reverse("create-account")
 
     client = APIClient()
@@ -57,3 +65,7 @@ def test_create_account_api():
 
     assert response.status_code == status.HTTP_201_CREATED
     assert Account.objects.filter(email=data['email']).exists()
+
+    response = client.post(url, data=fake_data)
+
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
