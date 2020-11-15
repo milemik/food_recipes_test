@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from recipes.models import Ingredients, Recipes, Rating
-from recipes.utils import is_recipe_owner, get_average_rating
+from recipes.utils import is_recipe_owner, get_average_rating, check_if_user_rated_ones
 
 
 class IngredientsSerializer(serializers.ModelSerializer):
@@ -44,4 +44,6 @@ class RatingSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         if is_recipe_owner(validated_data):
             raise ValidationError("Can't rate your recipe!")
+        if check_if_user_rated_ones(validated_data):
+            raise ValidationError("You already voted once!")
         return Rating.objects.create(**validated_data)

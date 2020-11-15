@@ -16,6 +16,11 @@ def is_recipe_owner(data):
     return False
 
 
+def check_if_user_rated_ones(data):
+    if Rating.objects.filter(user=data.get("user"), recipe=data.get("recipe")).exists():
+        return True
+    return False
+
 def get_average_rating(pk):
     """
     Get average rating for recipe

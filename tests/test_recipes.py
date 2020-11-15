@@ -111,6 +111,7 @@ def test_rate_api(user_client):
 
     response = client.post(url, {"recipe": recipe.pk, "rate": 4})
     assert response.status_code == status.HTTP_400_BAD_REQUEST
+    assert response.json()[0] == "Can't rate your recipe!"
 
 
 @pytest.mark.django_db
@@ -134,3 +135,23 @@ def test_average_rate(user_client):
 
     assert response.status_code == status.HTTP_200_OK
     assert response.json()[0]['average_rating'] == expected_average_rate
+
+@pytest.mark.django_db
+def test_voting_twice_same_user(user_client):
+    user, client = user_client
+    recipe_owner = AccountFactory()
+    recipe = RecipesFactory(author=recipe_owner)
+    data = {
+        "recipe": recipe.pk,
+        "rate": 3
+    }
+    url = reverse("rate")
+
+    response = client.post(url, data)
+
+    assert response.status_code == status.HTTP_201_CREATED
+
+    response = client.post(url, data)
+
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    assert response.json()[0] == "You already voted once!"
