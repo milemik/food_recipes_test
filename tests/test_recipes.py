@@ -63,7 +63,7 @@ def test_ingredients_api():
 
     response = client.get(url)
 
-    assert response.status_code == status.HTTP_401_UNAUTHORIZED
+    assert response.status_code == status.HTTP_403_FORBIDDEN
 
 
 @pytest.mark.django_db

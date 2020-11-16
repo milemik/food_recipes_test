@@ -6,6 +6,7 @@ from rest_framework.test import APIClient
 from accounts.models import Account
 from tests.factories import AccountFactory
 
+from .test_recipes import user_client
 
 @pytest.mark.django_db
 def test_account_create_model():
@@ -69,3 +70,17 @@ def test_create_account_api():
     response = client.post(url, data=fake_data)
 
     assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+
+@pytest.mark.django_db
+def test_account_info_api(user_client):
+    user, client = user_client
+
+    url = f"http://localhost:8000/api/login/account/{user.id}/"
+
+    response = client.get(url)
+
+    assert response.status_code == status.HTTP_200_OK
+    assert response.json()['email'] == user.email
+    assert response.json()['first_name'] == user.first_name
+    assert response.json()['last_name'] == user.last_name
