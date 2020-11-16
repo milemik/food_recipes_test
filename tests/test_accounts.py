@@ -76,7 +76,7 @@ def test_create_account_api():
 def test_account_info_api(user_client):
     user, client = user_client
 
-    url = f"http://localhost:8000/api/login/account/{user.id}/"
+    url = f"http://localhost:8000/api/account/{user.id}/"
 
     response = client.get(url)
 
