@@ -40,27 +40,27 @@ and login using the superuser credidentials you created in createsuperuser step
 
 ##### ENDPOINTS #####
               
-/api/account/token/             Get JWT token
+_/api/account/token/_ - Get JWT token
 
-/api/account/create/            Create account
+_/api/account/create/_ - Create account
 
-/api/account/token/refresh/     Refresh JWT token
+_/api/account/token/refresh/_ - Refresh JWT token
 
-/api/account/<int:pk>/          Get users info
+_/api/account/<int:pk>/_ - Get users info
 
-/api/recipes/                   List of all recipes
+_/api/recipes/_ - List of all recipes
 
-/api/ingredients/               List/Create ingredients
+_/api/ingredients/_ - List/Create ingredients
 
-/api/recipes/create/            Create recipe
+_/api/recipes/create/_ - Create recipe
 
-/api/recipes/rate/              Rate recipe
+_/api/recipes/rate/_ - Rate recipe
 
-/api/recipes/?search=STRING     Search recipes that contain STRING in name, recipe_text or ingredients
+_/api/recipes/?search=STRING_ - Search recipes that contain STRING in name, recipe_text or ingredients
 
-/api/recipes/?max_ing_num=INT   Show recipes with INT max num of ingredients
+_/api/recipes/?max_ing_num=INT_ - Show recipes with INT max num of ingredients
 
-/api/recipes/?min_ing_num=INT   Show recipes with INT min num of ingredients
+_/api/recipes/?min_ing_num=INT_ - Show recipes with INT min num of ingredients
 
 
 ###### AUTHOR ######
