@@ -109,7 +109,7 @@ def test_rate_api(user_client):
 
 
 @pytest.mark.django_db
-def test_rate_api(user_client):
+def test_rating_api(user_client):
     user, client = user_client
     recipe = RecipesFactory(author=user)
     url = reverse("rate")
@@ -132,7 +132,7 @@ def test_average_rate(user_client):
     RatingFactory(recipe=recipe, user=user4, rate=4)
     RatingFactory(recipe=recipe, user=user5, rate=2)
 
-    expected_average_rate = round((3+5+4+2)/4, 2)
+    expected_average_rate = round((3 + 5 + 4 + 2) / 4, 2)
 
     url = reverse("all-recipes")
 
@@ -140,6 +140,7 @@ def test_average_rate(user_client):
 
     assert response.status_code == status.HTTP_200_OK
     assert response.json()[0]['average_rating'] == expected_average_rate
+
 
 @pytest.mark.django_db
 def test_voting_twice_same_user(user_client):
@@ -217,11 +218,8 @@ def test_recipes_search_filter(user_client):
 
     assert len(response.json()) == 1
 
-    url = f'/api/recipes/?search=fake'
+    url = '/api/recipes/?search=fake'
 
     response = client.get(url)
 
     assert len(response.json()) == 0
-
-
-

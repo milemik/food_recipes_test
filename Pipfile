@@ -16,6 +16,7 @@ ipdb = "*"
 requests = "*"
 clearbit = "*"
 django-filter = "*"
+flake8 = "*"
 
 [requires]
 python_version = "3.8"

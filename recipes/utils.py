@@ -21,6 +21,7 @@ def check_if_user_rated_ones(data):
         return True
     return False
 
+
 def get_average_rating(pk):
     """
     Get average rating for recipe

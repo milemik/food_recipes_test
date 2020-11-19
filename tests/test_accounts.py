@@ -6,7 +6,6 @@ from rest_framework.test import APIClient
 from accounts.models import Account
 from tests.factories import AccountFactory
 
-from .test_recipes import user_client
 
 @pytest.mark.django_db
 def test_account_create_model():

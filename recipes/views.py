@@ -1,4 +1,4 @@
-from django.db.models import F, Count
+from django.db.models import Count
 from rest_framework import generics, mixins, filters
 from rest_framework.permissions import IsAuthenticated
 
