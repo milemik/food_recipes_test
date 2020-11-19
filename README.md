@@ -6,7 +6,7 @@
 
 Docker installed on your machine
 
-##### SETUP #####
+##### **SETUP** #####
 
 Makemigrations using this command:
 
@@ -36,7 +36,7 @@ Run app:
 make docker
 ```
 
-##### Access admin panel #####
+##### **Access admin panel** #####
 
 On your favorite browser go to:
 
@@ -44,7 +44,7 @@ localhost:8000/admin/
 
 and login using the superuser credidentials you created in createsuperuser step
 
-##### ENDPOINTS #####
+##### **ENDPOINTS** #####
               
 _/api/account/token/_ - Get JWT token
 
