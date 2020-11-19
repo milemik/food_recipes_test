@@ -69,9 +69,14 @@ def test_ingredients_api():
 @pytest.mark.django_db
 def test_create_recipes(user_client):
     user, client = user_client
+    ingredients = IngredientsFactory()
     url = reverse("create-recipes")
 
-    response = client.post(url, {"name": "TestName", "recipe_text": "Some recipe text here"})
+    response = client.post(url, {
+        "name": "TestName",
+        "recipe_text": "Some recipe text here",
+        "ingredients": [ingredients.pk]
+    })
 
     assert response.status_code == status.HTTP_201_CREATED
     assert Recipes.objects.filter(author=user).exists()
@@ -155,3 +160,68 @@ def test_voting_twice_same_user(user_client):
 
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert response.json()[0] == "You already voted once!"
+
+
+@pytest.mark.django_db
+def test_recipes_filter_api(user_client):
+    user, client = user_client
+    recipes = RecipesFactory(author=user)
+    ing1 = IngredientsFactory()
+    ing2 = IngredientsFactory()
+    recipes.ingredients.add(ing1, ing2)
+
+    url = '/api/recipes/?min_ing_num=2'
+
+    response = client.get(url)
+
+    assert response.json()[0]['author']['first_name'] == user.first_name
+    assert len(response.json()) == 1
+
+    url = '/api/recipes/?max_ing_num=3'
+
+    response = client.get(url)
+
+    assert response.json()[0]['author']['first_name'] == user.first_name
+    assert len(response.json()) == 1
+
+    url = '/api/recipes/?max_ing_num=1'
+
+    response = client.get(url)
+
+    assert len(response.json()) == 0
+
+
+@pytest.mark.django_db
+def test_recipes_search_filter(user_client):
+    user, client = user_client
+    recipes = RecipesFactory(author=user)
+    ing1 = IngredientsFactory()
+    ing2 = IngredientsFactory()
+    recipes.ingredients.add(ing1, ing2)
+
+    url = f'/api/recipes/?search={recipes.name}'
+
+    response = client.get(url)
+
+    assert len(response.json()) == 1
+
+    url = f'/api/recipes/?search={recipes.recipe_text.split()[0]}'
+
+    response = client.get(url)
+
+    assert len(response.json()) == 1
+
+    url = f'/api/recipes/?search={recipes.ingredients.all()[0].name}'
+
+    response = client.get(url)
+
+    assert len(response.json()) == 1
+
+    url = f'/api/recipes/?search=fake'
+
+    response = client.get(url)
+
+    assert len(response.json()) == 0
+
+
+

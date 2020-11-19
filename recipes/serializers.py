@@ -1,15 +1,23 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
+from accounts.models import Account
 from recipes.models import Ingredients, Recipes, Rating
 from recipes.utils import is_recipe_owner, get_average_rating, check_if_user_rated_ones
+
+
+class AuthorSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Account
+        fields = ("first_name", "last_name")
 
 
 class IngredientsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ingredients
-        fileds = ("name", )
+        fields = ("name", )
 
 
 class CreateRecipesSerializer(serializers.ModelSerializer):
@@ -18,12 +26,13 @@ class CreateRecipesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recipes
-        fields = ("author", "name", "recipe_text",)
+        fields = ("author", "name", "recipe_text", "ingredients")
 
 
 class RecipesSerializer(serializers.ModelSerializer):
-
+    author = AuthorSerializer()
     average_rating = serializers.SerializerMethodField()
+    ingredients = IngredientsSerializer(many=True)
 
     class Meta:
         model = Recipes
