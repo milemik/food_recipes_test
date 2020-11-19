@@ -1,0 +1,27 @@
+version: '3.7'
+
+services:
+  postgres:
+    image: "postgres:11-alpine"
+    ports:
+      - "5432:5432"
+    volumes:
+      - data_postgres:/var/lib/postgresql/data/
+    environment:
+      - "POSTGRES_HOST_AUTH_METHOD=trust"
+
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: recipes_test
+    ports:
+    - '8000:8000'
+    volumes:
+    - './app'
+    command: python manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - postgres
+
+volumes:
+  data_postgres:

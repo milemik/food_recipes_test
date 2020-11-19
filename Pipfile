@@ -17,6 +17,7 @@ requests = "*"
 clearbit = "*"
 django-filter = "*"
 flake8 = "*"
+psycopg2-binary = "*"
 
 [requires]
 python_version = "3.8"

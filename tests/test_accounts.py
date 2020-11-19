@@ -72,8 +72,10 @@ def test_create_account_api():
 
 
 @pytest.mark.django_db
-def test_account_info_api(user_client):
-    user, client = user_client
+def test_account_info_api():
+    user = AccountFactory()
+    client = APIClient()
+    client.force_authenticate(user=user)
 
     url = f"http://localhost:8000/api/account/{user.id}/"
 
