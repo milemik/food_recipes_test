@@ -25,6 +25,12 @@ Create superuser for admin panel:
 make django-createsuperuser
 ```
 
+Run tests:
+
+```
+make test
+```
+
 Run app:
 ```
 make docker
